@@ -1,6 +1,6 @@
-﻿# 📧 Mass Mailer
+# 📧 Mass Mailer
 
-Aplicación web construida con **Python + Streamlit** para el envío masivo de correos personalizados, diseñada para evitar detección como spam mediante aleatorización de plantillas.
+Aplicación web construida con Python + Streamlit para el envío masivo de correos personalizados, diseñada para evitar detección como spam mediante aleatorización de plantillas.
 
 ## Tecnologías
 - Python 3.10+
@@ -10,28 +10,14 @@ Aplicación web construida con **Python + Streamlit** para el envío masivo de c
 
 ## Instalación
 
-\\\ash
+```bash
 git clone https://github.com/Amairaniasd/mass-mailer.git
 cd mass-mailer
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 streamlit run app.py
-\\\
-
-## Estructura del proyecto
-
-\\\
-mass-mailer/
-├── app.py              # Aplicación principal
-├── mailer/
-│   ├── __init__.py
-│   ├── loader.py       # Carga y validación de CSV
-│   ├── templates.py    # Motor de plantillas aleatorizadas
-│   └── sender.py       # Lógica de envío SMTP
-├── requirements.txt
-└── .gitignore
-\\\
+```
 
 ## Cronograma
 
