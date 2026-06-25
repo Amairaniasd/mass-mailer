@@ -26,7 +26,7 @@ streamlit run app.py
 | 1 | Configuración del entorno y estructura base | ✅  |
 | 2 | Carga y validación de CSV con Pandas | ✅  |
 | 3 | Motor de aleatorización de plantillas | ✅  |
-| 4 | Integración UI de credenciales SMTP | ⏳  |
-| 5 | Barra de progreso y session_state | ⏳  |
-| 6 | Pruebas, manejo de errores y deploy | ⏳  |
-| 7 | Documentación técnica y refinamiento UI/UX | ⏳ |
+| 4 | Integración UI de credenciales SMTP |   |
+| 5 | Barra de progreso y session_state |   |
+| 6 | Pruebas, manejo de errores y deploy |   |
+| 7 | Documentación técnica y refinamiento UI/UX |  |
