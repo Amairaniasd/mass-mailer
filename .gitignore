@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+venv/
+.venv/
+
+# Streamlit secrets (credenciales SMTP - NUNCA subir al repo)
+.streamlit/secrets.toml
+
+# Archivos de datos locales
+*.csv
+*.xls
+*.xlsx
+
+# IDEs
+.vscode/
+.idea/
