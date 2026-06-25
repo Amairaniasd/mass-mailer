@@ -1,4 +1,4 @@
-﻿import pandas as pd
+import pandas as pd
 
 REQUIRED_COLS = {"First Name", "Last Name", "Email", "Email Status"}
 
@@ -20,7 +20,7 @@ def load_contacts(file) -> pd.DataFrame:
     return df
 
 
-def preview_contacts(df) -> pd.DataFrame:
+def preview_contacts(df: pd.DataFrame) -> pd.DataFrame:
     cols = ["First Name", "Last Name", "Email", "Company Name"]
     available = [c for c in cols if c in df.columns]
     return df[available].head(10)
