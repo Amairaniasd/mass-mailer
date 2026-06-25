@@ -29,4 +29,4 @@ streamlit run app.py
 | 4 | Integración UI de credenciales SMTP | ⏳  |
 | 5 | Barra de progreso y session_state | ⏳  |
 | 6 | Pruebas, manejo de errores y deploy | ⏳  |
-| 7 | Documentación técnica y refinamiento UI/UX | ⏳ Pendiente |
+| 7 | Documentación técnica y refinamiento UI/UX | ⏳ |
