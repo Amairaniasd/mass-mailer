@@ -2,11 +2,11 @@
 
 SUBJECTS = [
     "Pregunta rapida para {first_name}",
-    "Esto podria interesarte, {first_name}",
-    "{first_name}, vale 2 minutos?",
+    "Idea para {company}",
+    "{first_name}, consulta breve",
     "Seguimiento sobre algo relevante para {company}",
     "Ideas para el equipo de {company}",
-    "Hola {first_name}, tenia una idea",
+    "Hola {first_name}, queria compartirte algo",
     "Contactando a {company}",
 ]
 
@@ -19,18 +19,18 @@ OPENERS = [
 ]
 
 BODIES = [
-    "Hemos trabajado con equipos de tu industria en algo que creo que puede ayudar genuinamente a {company}.",
-    "Dado tu rol en {company}, pense que esto te seria util.",
-    "Ayudamos a empresas como {company} a resolver un problema muy especifico que creo que aplica en tu caso.",
-    "He estado siguiendo lo que hace {company} y queria compartir algo util.",
+    "Estoy contactando a equipos de tu industria para compartir una propuesta que podria ser util para {company}.",
+    "Por el tipo de trabajo que hace {company}, pense que valia la pena escribirte directamente.",
+    "Estamos compartiendo una solucion sencilla para equipos como {company}, y queria saber si tiene sentido para ustedes.",
+    "Vi informacion publica de {company} y pense que esta idea podria ser relevante para tu equipo.",
 ]
 
 CLOSINGS = [
     "Estarias abierto a una llamada rapida?",
     "Con gusto comparto mas detalles si te interesa.",
     "Avisame si es relevante, sin compromiso.",
-    "Vale una llamada de 15 minutos?",
-    "Tienes disponibilidad para una llamada esta semana?",
+    "Si tiene sentido, puedo enviarte mas informacion.",
+    "Te parece bien si te comparto mas detalles?",
 ]
 
 def render_template(contact: dict) -> tuple:
@@ -42,5 +42,13 @@ def render_template(contact: dict) -> tuple:
     body_line = random.choice(BODIES).format(company=company)
     closing = random.choice(CLOSINGS)
 
-    body = f"Hola {first},\n\n{opener}\n\n{body_line}\n\n{closing}\n\nSaludos,\n[TU NOMBRE]"
+    body = (
+        f"Hola {first},\n\n"
+        f"{opener}\n\n"
+        f"{body_line}\n\n"
+        f"{closing}\n\n"
+        "Saludos,\n"
+        "Amairani Rosales\n\n"
+        "Si prefieres que no vuelva a contactarte, respondeme con 'baja' y lo respeto."
+    )
     return subject, body
