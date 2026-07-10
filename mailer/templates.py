@@ -33,7 +33,7 @@ CLOSINGS = [
     "Te parece bien si te comparto mas detalles?",
 ]
 
-def render_template(contact: dict) -> tuple:
+def render_template(contact: dict, sender_name="Amairani Rosales", reply_email=None) -> tuple:
     first = contact.get("First Name", "estimado")
     company = contact.get("Company Name", "su empresa")
 
@@ -48,7 +48,8 @@ def render_template(contact: dict) -> tuple:
         f"{body_line}\n\n"
         f"{closing}\n\n"
         "Saludos,\n"
-        "Amairani Rosales\n\n"
+        f"{sender_name}\n"
+        f"{reply_email or ''}\n\n"
         "Si prefieres que no vuelva a contactarte, respondeme con 'baja' y lo respeto."
     )
     return subject, body

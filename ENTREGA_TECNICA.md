@@ -29,6 +29,7 @@ La aplicacion requiere estos secretos:
 SENDGRID_API_KEY = "tu_api_key_de_sendgrid"
 SENDGRID_FROM_EMAIL = "informaitesi@gmail.com"
 SENDGRID_FROM_NAME = "Amairani Rosales"
+REPLY_TO_EMAIL = "informaitesi@gmail.com"
 ```
 
 En Streamlit Cloud se configuran desde `Settings > Secrets`.
@@ -70,3 +71,4 @@ Joel,Test,correo@example.com,verified,Test Company
 - Crear una API Key nueva.
 - Configurar los secretos en Streamlit Cloud.
 - Borrar o regenerar cualquier API Key anterior que haya sido compartida.
+- Para mejorar entregabilidad, autenticar un dominio propio en SendGrid con SPF, DKIM y DMARC.

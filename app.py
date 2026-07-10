@@ -30,6 +30,7 @@ def get_sendgrid_config():
     api_key = get_setting("SENDGRID_API_KEY")
     from_email = get_setting("SENDGRID_FROM_EMAIL")
     from_name = get_setting("SENDGRID_FROM_NAME", "Amairani Rosales")
+    reply_to_email = get_setting("REPLY_TO_EMAIL", from_email)
 
     if not api_key or not from_email:
         return None
@@ -38,7 +39,14 @@ def get_sendgrid_config():
         "api_key": api_key,
         "from_email": from_email,
         "from_name": from_name,
+        "reply_to_email": reply_to_email,
     }
+
+
+def render_configured_template(contact):
+    sender_name = get_setting("SENDGRID_FROM_NAME", "Amairani Rosales")
+    reply_email = get_setting("REPLY_TO_EMAIL", get_setting("SENDGRID_FROM_EMAIL"))
+    return render_template(contact, sender_name=sender_name, reply_email=reply_email)
 
 
 def has_contacts():
@@ -81,7 +89,7 @@ st.header("3. Vista previa")
 st.caption("Genera una muestra del correo antes de enviar.")
 if st.button("Generar vista previa", disabled=not has_contacts()):
     sample = st.session_state["contacts"].iloc[0].to_dict()
-    subj, body = render_template(sample)
+    subj, body = render_configured_template(sample)
     st.session_state["preview_subject"] = subj
     st.session_state["preview_body"] = body
 if "preview_subject" in st.session_state:
@@ -125,7 +133,7 @@ if st.button("Iniciar envio", type="primary", disabled=not ready_to_send):
         results = send_batch(
             contacts_to_send,
             st.session_state["sendgrid"],
-            render_template,
+            render_configured_template,
             progress_callback=lambda p: progress.progress(p, text=f"Enviando... {int(p*100)}%"),
         )
         st.session_state["results"] = results

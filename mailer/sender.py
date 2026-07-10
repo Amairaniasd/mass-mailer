@@ -2,7 +2,7 @@ import random
 import time
 
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+from sendgrid.helpers.mail import Email, Mail
 
 
 def send_email(sendgrid_config, to_email, subject, body):
@@ -17,6 +17,9 @@ def send_email(sendgrid_config, to_email, subject, body):
     )
 
     client = SendGridAPIClient(sendgrid_config["api_key"])
+    if sendgrid_config.get("reply_to_email"):
+        message.reply_to = Email(sendgrid_config["reply_to_email"])
+
     response = client.send(message)
     if response.status_code >= 400:
         raise RuntimeError(f"SendGrid respondio con estado {response.status_code}")
