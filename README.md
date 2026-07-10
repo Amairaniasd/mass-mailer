@@ -39,6 +39,25 @@ Antes de enviar correos reales:
 - Generar una API Key nueva.
 - Regenerar o borrar cualquier API Key anterior que se haya compartido o subido por error.
 
+## Flujo de uso
+
+1. Cargar el archivo CSV, XLS o XLSX exportado desde Apollo.
+2. Revisar que la app haya conservado solo contactos con `Email Status = verified`.
+3. Confirmar que SendGrid este configurado con el remitente correcto.
+4. Generar una vista previa del asunto y cuerpo.
+5. Elegir la cantidad de correos a enviar.
+6. Confirmar la lista y ejecutar el envio.
+7. Revisar la tabla de resultados.
+
+## Validaciones incluidas
+
+- Columnas requeridas: `First Name`, `Last Name`, `Email`, `Email Status`.
+- Filtrado automatico de contactos no verificados.
+- Eliminacion de filas sin correo.
+- Validacion basica de correos con `@`.
+- Retraso aleatorio de 3 a 8 segundos entre envios.
+- Resultados separados entre enviados y errores.
+
 ## Cronograma
 
 | Semana | Entregable | Estado |
@@ -49,4 +68,4 @@ Antes de enviar correos reales:
 | 4 | Configuracion de envio con SendGrid | Completado |
 | 5 | Barra de progreso y session_state | Completado |
 | 6 | Pruebas, manejo de errores y deploy | Completado |
-| 7 | Documentacion tecnica y refinamiento UI/UX | Pendiente |
+| 7 | Documentacion tecnica y refinamiento UI/UX | Completado |

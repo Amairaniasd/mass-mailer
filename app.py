@@ -41,6 +41,10 @@ def get_sendgrid_config():
     }
 
 
+def has_contacts():
+    return "contacts" in st.session_state and len(st.session_state["contacts"]) > 0
+
+
 st.title("Mass Mailer")
 st.caption("Sistema de envio masivo de correos personalizados")
 st.divider()
@@ -66,17 +70,20 @@ else:
     st.session_state.pop("sendgrid", None)
     st.warning("Configura SENDGRID_API_KEY y SENDGRID_FROM_EMAIL en los secretos de Streamlit.")
 
+status_cols = st.columns(2)
+with status_cols[0]:
+    st.metric("Contactos listos", len(st.session_state["contacts"]) if has_contacts() else 0)
+with status_cols[1]:
+    st.metric("Servicio de envio", "Listo" if "sendgrid" in st.session_state else "Pendiente")
+
 st.divider()
 st.header("3. Vista previa")
 st.caption("Genera una muestra del correo antes de enviar.")
-if st.button("Generar vista previa"):
-    if "contacts" not in st.session_state:
-        st.warning("Carga un archivo CSV antes de continuar.")
-    else:
-        sample = st.session_state["contacts"].iloc[0].to_dict()
-        subj, body = render_template(sample)
-        st.session_state["preview_subject"] = subj
-        st.session_state["preview_body"] = body
+if st.button("Generar vista previa", disabled=not has_contacts()):
+    sample = st.session_state["contacts"].iloc[0].to_dict()
+    subj, body = render_template(sample)
+    st.session_state["preview_subject"] = subj
+    st.session_state["preview_body"] = body
 if "preview_subject" in st.session_state:
     st.text_input("Asunto", value=st.session_state["preview_subject"], disabled=True)
     st.text_area("Cuerpo", value=st.session_state["preview_body"], height=220, disabled=True)
@@ -89,17 +96,34 @@ if "sending" not in st.session_state:
 if "results" not in st.session_state:
     st.session_state["results"] = []
 
-if st.button("Iniciar envio", type="primary", disabled=st.session_state["sending"]):
-    if "contacts" not in st.session_state:
+if has_contacts():
+    max_to_send = st.number_input(
+        "Cantidad de correos a enviar",
+        min_value=1,
+        max_value=len(st.session_state["contacts"]),
+        value=len(st.session_state["contacts"]),
+        step=1,
+    )
+else:
+    max_to_send = 0
+
+confirmed = st.checkbox("Confirmo que el remitente y la lista son correctos")
+ready_to_send = has_contacts() and "sendgrid" in st.session_state and confirmed and not st.session_state["sending"]
+
+if st.button("Iniciar envio", type="primary", disabled=not ready_to_send):
+    if not has_contacts():
         st.warning("Carga un archivo CSV antes de continuar.")
     elif "sendgrid" not in st.session_state:
         st.warning("Configura SendGrid antes de continuar.")
+    elif not confirmed:
+        st.warning("Confirma los datos antes de iniciar el envio.")
     else:
         st.session_state["sending"] = True
         st.session_state["results"] = []
+        contacts_to_send = st.session_state["contacts"].head(max_to_send)
         progress = st.progress(0, text="Iniciando envio...")
         results = send_batch(
-            st.session_state["contacts"],
+            contacts_to_send,
             st.session_state["sendgrid"],
             render_template,
             progress_callback=lambda p: progress.progress(p, text=f"Enviando... {int(p*100)}%"),
