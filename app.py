@@ -1,8 +1,11 @@
-﻿import streamlit as st
+import os
+
 import pandas as pd
+import streamlit as st
+
 from mailer.loader import load_contacts, preview_contacts
-from mailer.templates import render_template
 from mailer.sender import send_batch
+from mailer.templates import render_template
 
 st.set_page_config(page_title="Mass Mailer", layout="centered")
 
@@ -14,6 +17,29 @@ st.markdown("""
         footer { visibility: hidden; }
     </style>
 """, unsafe_allow_html=True)
+
+
+def get_setting(name, default=""):
+    try:
+        return st.secrets.get(name, os.getenv(name, default))
+    except Exception:
+        return os.getenv(name, default)
+
+
+def get_sendgrid_config():
+    api_key = get_setting("SENDGRID_API_KEY")
+    from_email = get_setting("SENDGRID_FROM_EMAIL")
+    from_name = get_setting("SENDGRID_FROM_NAME", "Amairani Rosales")
+
+    if not api_key or not from_email:
+        return None
+
+    return {
+        "api_key": api_key,
+        "from_email": from_email,
+        "from_name": from_name,
+    }
+
 
 st.title("Mass Mailer")
 st.caption("Sistema de envio masivo de correos personalizados")
@@ -31,18 +57,14 @@ if uploaded:
         st.error(str(e))
 
 st.divider()
-st.header("2. Configuracion SMTP")
-st.caption("Para Gmail usa un App Password, no tu contrasena normal.")
-col1, col2 = st.columns(2)
-with col1:
-    smtp_host = st.text_input("Servidor SMTP", value="smtp.gmail.com")
-    smtp_user = st.text_input("Correo remitente")
-with col2:
-    smtp_port = st.number_input("Puerto", value=587)
-    smtp_pass = st.text_input("App Password", type="password")
-if smtp_host and smtp_user and smtp_pass:
-    st.session_state["smtp"] = {"host": smtp_host, "port": int(smtp_port), "user": smtp_user, "password": smtp_pass}
-    st.success("Credenciales configuradas correctamente.")
+st.header("2. Configuracion de envio")
+sendgrid_config = get_sendgrid_config()
+if sendgrid_config:
+    st.session_state["sendgrid"] = sendgrid_config
+    st.success(f"Remitente configurado: {sendgrid_config['from_email']}")
+else:
+    st.session_state.pop("sendgrid", None)
+    st.warning("Configura SENDGRID_API_KEY y SENDGRID_FROM_EMAIL en los secretos de Streamlit.")
 
 st.divider()
 st.header("3. Vista previa")
@@ -70,17 +92,17 @@ if "results" not in st.session_state:
 if st.button("Iniciar envio", type="primary", disabled=st.session_state["sending"]):
     if "contacts" not in st.session_state:
         st.warning("Carga un archivo CSV antes de continuar.")
-    elif "smtp" not in st.session_state:
-        st.warning("Configura las credenciales SMTP antes de continuar.")
+    elif "sendgrid" not in st.session_state:
+        st.warning("Configura SendGrid antes de continuar.")
     else:
         st.session_state["sending"] = True
         st.session_state["results"] = []
         progress = st.progress(0, text="Iniciando envio...")
         results = send_batch(
             st.session_state["contacts"],
-            st.session_state["smtp"],
+            st.session_state["sendgrid"],
             render_template,
-            progress_callback=lambda p: progress.progress(p, text=f"Enviando... {int(p*100)}%")
+            progress_callback=lambda p: progress.progress(p, text=f"Enviando... {int(p*100)}%"),
         )
         st.session_state["results"] = results
         st.session_state["sending"] = False
