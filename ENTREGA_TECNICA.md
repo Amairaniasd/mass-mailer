@@ -51,7 +51,7 @@ Ejemplo:
 
 ```csv
 First Name,Last Name,Email,Email Status,Company Name
-Joel,Test,correo@example.com,verified,Test Company
+Paulina,Test,correo@example.com,verified,Test Company
 ```
 
 ## Criterios de aceptacion
